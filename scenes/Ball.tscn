@@ -1,13 +1,37 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/ball.gd" type="Script" id=1]
 [ext_resource path="res://assets/ball.png" type="Texture" id=2]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.0
 bounce = 1.0
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="GDScript" id=2]
+script/source = "extends RigidBody2D
+
+const SPEED_UP = 4
+const MAX_SPEED = 300
+
+
+
+func _physics_process(delta):
+	if position.y > get_viewport_rect().end.y:
+		queue_free()
+
+
+func _on_Ball_body_entered(body):
+	if body.is_in_group(\"bricks\"):
+		$\"/root/Game/Score\".score += 5
+		body.queue_free()
+			
+	if body.name == \"Paddle\":
+		var speed = linear_velocity.length()
+		var direction = position - body.get_node(\"Ancor\").global_position
+		var velocity = direction.normalized() * min(speed + SPEED_UP, MAX_SPEED)
+		linear_velocity = velocity
+"
+
+[sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 4, 4 )
 
 [node name="Ball" type="RigidBody2D"]
@@ -19,7 +43,7 @@ contact_monitor = true
 linear_velocity = Vector2( 200, -200 )
 linear_damp = 0.0
 angular_damp = 0.0
-script = ExtResource( 1 )
+script = SubResource( 2 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -29,5 +53,5 @@ scale = Vector2( 4, 4 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 [connection signal="body_entered" from="." to="." method="_on_Ball_body_entered"]
