@@ -1,12 +1,25 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Paddle.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/Brick.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/score.gd" type="Script" id=4]
 
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+const Ball = preload(\"res://scenes/Ball.tscn\")
+
+
+
+func _input(event):
+	if event.is_action_pressed(\"ui_mouse_left\"):
+		var ball = Ball.instance()
+		ball.position = $Paddle.position - Vector2(0, 16)
+		add_child(ball)
+"
+
 [node name="Game" type="Node"]
-script = ExtResource( 1 )
+script = SubResource( 1 )
 
 [node name="Paddle" parent="." instance=ExtResource( 2 )]
 
