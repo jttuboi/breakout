@@ -19,6 +19,10 @@ config/name="Breakout"
 run/main_scene="res://src/scenes/Game.tscn"
 config/icon="res://assets/icon.png"
 
+[autoload]
+
+Events="*res://src/scripts/Events.gd"
+
 [display]
 
 window/size/width=640

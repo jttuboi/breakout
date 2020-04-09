@@ -2,20 +2,46 @@
 
 [ext_resource path="res://src/scenes/Paddle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/scenes/Brick.tscn" type="PackedScene" id=2]
-[ext_resource path="res://src/scripts/score.gd" type="Script" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-const Ball = preload(\"res://scenes/Ball.tscn\")
+const Ball = preload(\"res://src/scenes/Ball.tscn\")
+
+onready var Paddle = $Paddle
 
 
 
 func _input(event):
 	if event.is_action_pressed(\"ui_mouse_left\"):
-		var ball = Ball.instance()
-		ball.position = $Paddle.position - Vector2(0, 16)
-		add_child(ball)
+		create_new_ball()
+
+
+func create_new_ball():
+	var ball = Ball.instance()
+	ball.position = _get_new_ball_position()
+	add_child(ball)
+
+
+func _get_new_ball_position():
+	# top middle of the paddle
+	return Paddle.position - Vector2(0, 16)
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Label
+
+var _score = 0
+
+
+
+func _ready():
+	Events.connect(\"brick_destroyed\", self, \"_on_Events_brick_destroyed\")
+
+
+func _on_Events_brick_destroyed():
+	_score += 5
+	text = \"Score: \" + str(_score)
 "
 
 [node name="Game" type="Node"]
@@ -25,7 +51,7 @@ script = SubResource( 1 )
 
 [node name="Walls" type="StaticBody2D" parent="."]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls"]
+[node name="Collision" type="CollisionPolygon2D" parent="Walls"]
 polygon = PoolVector2Array( 0, 0, 640, 0, 640, 380, 660, 380, 660, -20, -20, -20, -20, 380, 0, 380 )
 
 [node name="Bricks" type="Node" parent="."]
@@ -72,4 +98,7 @@ margin_top = 20.0
 margin_right = 71.0
 margin_bottom = 34.0
 text = "Score: 0"
-script = ExtResource( 3 )
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

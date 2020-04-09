@@ -5,10 +5,17 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody2D
 
+onready var Ancor = $Ancor
+
 
 
 func _physics_process(delta):
+	# follow the mouse position
 	position.x = get_global_mouse_position().x
+
+
+func get_ancor_position():
+	return Ancor.global_position
 "
 
 [sub_resource type="RectangleShape2D" id=2]
