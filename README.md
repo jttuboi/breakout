@@ -1,6 +1,8 @@
 # Breakout
 
-Simple breakout game. I did to learn how to develop in the Godot engine. I used Godot version 3.1.
+Simple breakout game. I did to learn how to develop in the Godot engine.
+
+[Update] This code is refactored to use signals and modified the folder organization of the project. I used Godot version 3.2.
 
 ## Reference
 
